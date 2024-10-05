@@ -163,7 +163,10 @@ export default function PhaserScene({
                 setScene(scene);
             });
 
-        return () => game.scene.remove(id);   // Scene Goodbye
+        return () => { // Scene Goodbye
+            scene.input.keyboard.removeAllKeys(true);
+            game.scene.remove(id);
+        }
 
     }, []);
     
