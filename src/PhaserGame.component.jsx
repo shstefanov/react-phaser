@@ -87,7 +87,14 @@ export default function PhaserGame({ children, width, height, style = {}, autofi
         game.events.once(Phaser.Core.Events.READY, () => setGame(game));
 
         // Subscribe to game's resize event and call most actual resizeGame handler
-        autofit && game.scale.on('resize', () => setResizeMarker(Date.now() + Math.random()));
+        let debounce = null;
+        autofit && game.scale.on('resize', () => {
+            if(debounce) return;
+            debounce = setTimeout( () => {
+                setResizeMarker(Math.floor(Date.now()));
+                debounce = null;
+            }, 150)
+        });
 
     }, [ canvas ]);
 
