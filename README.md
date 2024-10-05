@@ -8,7 +8,8 @@ import { PhaserGame } from "@orbits/react-phaser";
 export default function MyGame(){
     return <PhaserGame
         // Most of options: https://newdocs.phaser.io/docs/3.80.0/Phaser.Types.Core.GameConfig
-        type="WEBGL" // "CANVAS", "WEBGL", "HEADLESS" or "AUTO" (default)
+        type="WEBGL"    // "CANVAS", "WEBGL", "HEADLESS" or "AUTO" (default)
+        autofit={true}  // Listen for window resize and fit the game canvas in parent div
         width={800} height={600}
         physics={{
             default: 'arcade',
