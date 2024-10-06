@@ -69,8 +69,6 @@ export default function PhaserComponent({
 
     }, [ follow ]);
 
-    window.camera = scene.cameras.main;
-
     return <cameraContext.Provider value={ scene ? scene.cameras.main : null }>
         {scene && children}
     </cameraContext.Provider>;
