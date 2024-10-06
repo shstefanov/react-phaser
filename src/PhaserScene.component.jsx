@@ -4,9 +4,9 @@ import { useGame } from "./PhaserGame.component";
 
 import { parseURL } from "./utils.js";
 
-const sceneContext    = createContext();
-export const useScene = useContext.bind(this, sceneContext);
-
+const sceneContext     = createContext();
+export const useScene  = useContext.bind(this, sceneContext);
+export const useCamera = () => useScene().cameras.main;
 
 class PhaserReactScene extends Phaser.Scene
 {
@@ -19,29 +19,12 @@ class PhaserReactScene extends Phaser.Scene
 
     create () {
 
-        // this.appData.autofit && this.scale.on('resize', this.resize, this);
-
         this.createAnimations(this.appData.sprites);
         this.createSounds(this.appData.audio);
 
         for(let event_name in this.appData.mouseEvents){
             this.input.on(event_name, this.appData.mouseEvents[event_name]);
         }
-    }
-
-    resize(){
-        // let width, height;
-        // if(this.appData.autofit === true){
-        //     width  = window.innerWidth;
-        //     height = window.innerHeight;
-        // }
-
-        // else return;
-
-        // console.log("SCENE RESIZE", this, width, height);
-        // this.game.scale.setGameSize(width, height);
-        // this.sizer.setSize(width, height);
-        
     }
 
     update(){
@@ -170,8 +153,8 @@ export default function PhaserScene({
 
     }, []);
     
-    return scene && <sceneContext.Provider value={ scene }>
-        { children }
+    return <sceneContext.Provider value={ scene }>
+        { scene && children }
     </sceneContext.Provider>;
 
 }

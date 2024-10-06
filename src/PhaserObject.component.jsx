@@ -63,10 +63,7 @@ export default function PhaserComponent({
     interactive, draggable,
 
     ...rest          // Separate to events and object_props
-}){
-
-    console.log("RENDER: draggable", draggable);
-    
+}){    
     const scene = useScene();
 
     const [ object, setObject ] = useState(null);

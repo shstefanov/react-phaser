@@ -181,11 +181,65 @@ export default function MyObject(){
 }
 ```
 
+# Camera
+```jsx
+import { PhaserCamera } from "@orbits.react-phaser"
+
+export default () => <PhaserCamera
+
+    id              = { "my-camera-1"   } // Name of camera object
+
+    angle           = { 10              } // Rotation angle in degrees
+    rotation        = { 1.23            } // Rotation angle in radians
+    alpha           = { 0.7             } // alpha transparency of the scene
+    backgroundColor = { "#010101"       } // Background color in hex code
+
+    bounds={{     // Bounds rectangle
+        x:        boundsX,       // Start X
+        y:        boundsY,       // Start Y
+        width:    boundsWidth,   // Width
+        height:   boundsHeight,  // Height
+        centerOn: boundsCenter   // Boolean, position camera on rectangle center
+    }}
+
+    viewport={{        // Viewport rectangle - where viewport is located on the game canvas
+        x:        0,   // Start X
+        y:        0,   // Start Y
+        width:    800, // Width
+        height:   600  // Height
+    }}
+
+    size         = {{ width: sizeWidth,     height: sizeHeight     }} // The size of viewport
+
+    // Phaser deadzone where camera will stop following object
+    deadZone     = {{ width: deadzoneWidth, height: deadzoneHeight }}
+    
+
+    followOffset = {{ x: 10, y: 10 }} // Offset from foolowed game object
+
+    // Zoom < 1 means zoom out, zoom > 1 meens zoom in, 1 means no zoom
+    zoom         = {{ x: 1,         y: 1         }} // Zoom can be different for axes
+    zoom         = { 1 }                            // With number
+    
+    lerp         = {{ x: lerpX,         y: lerpY         }} // Interpolate to target (1 - instant, 0.1 - slow)
+    origin       = {{ x: originX,       y: originY       }} // Camera rotation origin
+    position     = {{ x: positionX,     y: positionY     }} // Camera position
+    scroll       = {{ x: scrollX,       y: scrollY       }} // Scroll offset in game bounds
+    
+    
+    isSceneCamera = { isSceneCamera }
+    roundPixels   = { roundPixels   }
+    visible       = { visible       }
+    
+    follow={ 'my-object-id' } // Follow object with this id
+/>;
+```
 
 
 # Hooks
 ```jsx
-import { useGame }   from "@orbits/react-phaser";
-import { useScene }  from "@orbits/react-phaser";
+import { useGame   } from "@orbits/react-phaser";
+import { useScene  } from "@orbits/react-phaser";
 import { useObject } from "@orbits/react-phaser";
+import { useCamera } from "@orbits/react-phaser";
 ```

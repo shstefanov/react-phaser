@@ -55,7 +55,7 @@ export default function PhaserGame({ children, width, height, style = {}, autofi
                 scene.scale.resize(width, height);
                 scene.cameras.main.setBounds(0, 0, scene.scale.width, scene.scale.height);
                 scene.cameras.main.setZoom(1);
-                scene.cameras.main.setBackgroundColor('#000000');
+                scene.cameras.main.setBackgroundColor('#000000'); // TODO: Handle proper background color here
             }
         }
     }
