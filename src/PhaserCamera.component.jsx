@@ -6,7 +6,7 @@ import { useScene } from "./PhaserScene.component";
 const cameraContext    = createContext();
 export const useCamera = useContext.bind(this, cameraContext);
 
-export default function PhaserComponent({
+export default function PhaserCamera({
     children,
 
     id = "",

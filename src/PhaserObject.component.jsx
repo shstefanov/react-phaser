@@ -53,7 +53,10 @@ export const useObject = useContext.bind(this, objectContext);
 
 */
 
-export default function PhaserComponent({
+export default function PhaserObject({
+
+    id,
+
     images, sprites, // Assets
     
     create, update,  // Lifecycle
