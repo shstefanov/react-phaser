@@ -86,6 +86,7 @@ export default function PhaserObject({
             .catch( e => console.error(e))
             .then( () => {
                 const object = create(scene);
+                id && object.setName(id);
                 if(object){
 
                     update_context[0] = object;
