@@ -35,6 +35,8 @@ export default function PhaserCamera({
 
     follow
 }){
+
+    console.log("DEBUG: RENDER CAMERA");
     
     const scene = useScene();
 

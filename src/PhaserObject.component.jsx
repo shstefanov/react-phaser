@@ -10,22 +10,29 @@ export const useObject = useContext.bind(this, objectContext);
 // TODO: implement object properties:
 /*
     object.addCollidesWith(category);
+    object.removeCollidesWith(category);
+    
+    object.setCollidesWith(categories);
+    object.setCollisionCategory(category);
+    object.resetCollisionCategory();    
+    object.willCollideWith(category);
+    object.setCollideWorldBounds(value, bounceX, bounceY, onWorldBounds);
+
+    object.setBodySize(width, height, center);
     object.enableBody(reset, x, y, enableGameObject, showGameObject);
     object.disableBody(disableGameObject, hideGameObject);
     object.refreshBody();
-    object.removeCollidesWith(category);
-    object.resetCollisionCategory();    
-    object.willCollideWith(category);
+
+
     
-    object.setAngularAcceleration(value);
+    +object.setAngularAcceleration(value);
     object.setAngularDrag(value);
     object.setAngularVelocity(value);
-    object.setBodySize(width, height, center);
+    
     
     object.setCircle(radius, offsetX, offsetY);
-    object.setCollideWorldBounds(value, bounceX, bounceY, onWorldBounds);
-    object.setCollidesWith(categories);
-    object.setCollisionCategory.(category);
+    
+
     object.setDamping.(value);
     object.setDebug.(showBody, showVelocity, bodyColor);
     object.setDebugBodyColor(value);
@@ -65,14 +72,58 @@ export default function PhaserObject({
 
     interactive, draggable,
 
-    ...rest          // Separate to events and object_props
-}){    
+
+    collidesWith = [],
+    angularAcceleration = 0,
+
+
+    ...rest          // holds event handlers
+}){
+
+    console.log("DEBUG: RENDER OBJECT");
+
     const scene = useScene();
 
     const [ object, setObject ] = useState(null);
     const [ cache ] = useState({});
-
     cache.props = rest;
+
+    // Handle collidesWith value
+    useEffect( () => {
+
+        // object.addCollidesWith(category);
+        // object.removeCollidesWith(category);
+
+        const new_items = (collidesWith||[]).filter( (a,i,arr) => arr.indexOf(a) === i );
+
+        if(object){
+            
+            let add = [], remove = [];
+
+            if(!cache.collidesWith) add = new_items;
+            else {
+                for(let cat of new_items) if(cache.collidesWith.indexOf(cat) === -1) {
+                    add.push(cat);
+                }
+    
+                for(let cat of cache.collidesWith) if(new_items.indexOf(cat) === -1) {
+                    remove.push(cat);
+                }
+            }
+
+            for(let a of add)    object.addCollidesWith(a);
+            for(let r of remove) object.removeCollidesWith(r);
+
+        }
+
+        return () => { cache.collidesWith = new_items; }
+    }, [object, collidesWith.join(",")]);
+
+    // handleAngularAcceleration
+    useEffect( () => { 
+        if(object && object.body) object.body.angularAcceleration = angularAcceleration;
+    }, [object, angularAcceleration] );
+
 
     useEffect(() => { if(object && interactive) {
         scene.input.setDraggable(object, draggable);
@@ -85,7 +136,17 @@ export default function PhaserObject({
         scene.loadAssets({images, sprites}, true)
             .catch( e => console.error(e))
             .then( () => {
-                const object = create(scene);
+                const object = create(scene);                           window.object = object;
+
+                console.log("object.setAngularAcceleration", object.setAngularAcceleration);
+
+                Object.assign(object, {
+                    set setAngularAcceleration(value){
+                        throw new Error("???")
+                    }
+                });
+
+
                 id && object.setName(id);
                 if(object){
 

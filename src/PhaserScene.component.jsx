@@ -116,6 +116,9 @@ export default function PhaserScene({
     images, sprites, audio, // Assets to load
     ...options              // Scene options
 }){
+
+    console.log("DEBUG: RENDER SCENE");
+
     const game         = useGame();
 
     const [ scene, setScene ] = useState(null);

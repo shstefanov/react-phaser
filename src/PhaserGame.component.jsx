@@ -8,6 +8,13 @@ export const useGame = () => useContext(gameContext);
 
 export default function PhaserGame({ children, width, height, style = {}, autofit, ...options }){
 
+
+
+
+    console.log("DEBUG: RENDER GAME");
+
+
+
     const [ canvas, setCanvas             ] = useState(null);
     const [ game,   setGame               ] = useState(null);
     const [ prevSize, setPrevSize         ] = useState({ width: null, height: null });
