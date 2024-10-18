@@ -117,8 +117,6 @@ export default function PhaserScene({
     ...options              // Scene options
 }){
 
-    console.log("DEBUG: RENDER SCENE");
-
     const game         = useGame();
 
     const [ scene, setScene ] = useState(null);

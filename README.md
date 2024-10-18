@@ -112,19 +112,15 @@ export default function MyObject(){
         // Lazi loaded images, sprites and sounds,
         // object will be mounted after loader is ready
         images={{
-            jumper:     "/images/my-character.png",
+            jumper:          "/images/my-character.png",
         }}
-
-        sprites={{       // Preloaded sprites
+        sprites={{
             ninja:  { 
-                
                 url:         "/images/my-character-sprite.png",
-                
                 frameWidth:  32,
                 frameHeight: 36,
                 startFrame:  0,
                 endFrame:    11,
-
                 // Define some animations with this sprite
                 animations: {
                     'ninja.walk_north': { frameRate: 5, repeat: -1, frames: { start: 0, end: 2 } }, // Range of frames
@@ -134,11 +130,35 @@ export default function MyObject(){
                 }
             },
         }}
-
         audio = {{
             mysound:  { url: "/audio/interface6.wav", loop: false }, // with options
             mysound2: "/audio/interface7.wav"                        // only url
         }}
+
+
+        // Object attributes
+        collidesWith        = { [  ] } // Array, categories of objects that Arcade Physics Body will collide
+        collideWorldBounds  = { true }
+        visible             = { true }
+        
+        alpha               = { 1 }  // 0 - 1
+        // or
+        alpha               = { [topLeft, topRight, bottomLeft, bottomRight] }
+
+        zIndex              = { 1 }
+        flip                = { { x: false, y: false } }
+        angularAcceleration = { 5 } 
+        angularVelocity     = { 2 }
+        angle               = { degrees }
+        rotation            = { radians } // prioritized over angle
+        velocity            = { { x:     5,  y:       4 } }
+        bounce              = { { x:     1,  y:       1 } }
+        position            = { { x:     20, y:      30 } }
+        size                = { { width: 50, height: 00 } }
+        acceleration        = { { x:     5,  y:       4 } }
+        origin              = { { x:     5,  y:       4 } }
+        blendMode           = { string } // More at: https://rexrainbow.github.io/phaser3-rex-notes/docs/site/blendmode/
+
 
         interactive          // Needed to enable pointer events
         draggable            // Needed to enable drag events
@@ -160,7 +180,7 @@ export default function MyObject(){
         onPointerDownOutside = { (object, event) => { console.log("onPointerDownOutside", { object, event } ); } }
         onPointerLockChange  = { (object, event) => { console.log("onPointerLockChange",  { object, event } ); } }
 
-        onWheel              = { (object, event) => { console.log("onWheel",    { object, event } ); } }
+        onWheel              = { (object, event) => { console.log("onWheel",              { object, event } ); } }
 
         // This will be called by Phaser Scene 'create' method
         // or after lazy loading the object

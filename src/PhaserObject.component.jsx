@@ -7,59 +7,6 @@ import { useGame }  from "./PhaserGame.component";
 const objectContext    = createContext();
 export const useObject = useContext.bind(this, objectContext);
 
-// TODO: implement object properties:
-/*
-    object.addCollidesWith(category);
-    object.removeCollidesWith(category);
-    
-    object.setCollidesWith(categories);
-    object.setCollisionCategory(category);
-    object.resetCollisionCategory();    
-    object.willCollideWith(category);
-    object.setCollideWorldBounds(value, bounceX, bounceY, onWorldBounds);
-
-    object.setBodySize(width, height, center);
-    object.enableBody(reset, x, y, enableGameObject, showGameObject);
-    object.disableBody(disableGameObject, hideGameObject);
-    object.refreshBody();
-
-
-    
-    +object.setAngularAcceleration(value);
-    object.setAngularDrag(value);
-    object.setAngularVelocity(value);
-    
-    
-    object.setCircle(radius, offsetX, offsetY);
-    
-
-    object.setDamping.(value);
-    object.setDebug.(showBody, showVelocity, bodyColor);
-    object.setDebugBodyColor(value);
-    object.setDirectControl(value);
-
-    object.setBounce(x, y);       object.setBounceX(x);       object.setBounceY(y);
-    object.setAcceleration(x, y); object.setAccelerationX(x); object.setAccelerationY(y);
-    object.setDrag(x, y);         object.setDragX(x);         object.setDragY(y);
-    object.setFriction(x, y);     object.setFrictionX(x);     object.setFrictionY(y);
-    object.setGravity(x, y);      object.setGravityX(x);      object.setGravityY(y);
-    object.setVelocity(x, y);     object.setVelocityX(x);     object.setVelocityY(y);
-    
-    object.setImmovable(value);
-    object.setMass(value);
-    object.setMaxVelocity(x, y);
-    object.setOffset(x, y);
-    object.setPushable(value);
-    object.setSize(width, height, center);
-
-
-    
-
-
-
-
-*/
-
 export default function PhaserObject({
 
     id,
@@ -72,36 +19,48 @@ export default function PhaserObject({
 
     interactive, draggable,
 
+    // GameObject Phaser Attributes
+    collidesWith, collideWorldBounds,
+    visible,
+    alpha,
+    angularAcceleration, angularVelocity, angle, rotation,
 
-    collidesWith = [],
-    angularAcceleration = 0,
+    acceleration, origin, tint, tintFill, velocity, bounce,
 
+    position, blendMode, size,
+
+    zIndex,
+
+    flip = {},
+
+
+    // TODO: implement setAbove, setBelow
 
     ...rest          // holds event handlers
 }){
 
-    console.log("DEBUG: RENDER OBJECT");
-
     const scene = useScene();
 
     const [ object, setObject ] = useState(null);
+    
+    
     const [ cache ] = useState({});
     cache.props = rest;
 
+    // const hasBody = object && object.body;
+
     // Handle collidesWith value
-    useEffect( () => {
+    collidesWith && useEffect( () => {
 
         // object.addCollidesWith(category);
         // object.removeCollidesWith(category);
 
-        const new_items = (collidesWith||[]).filter( (a,i,arr) => arr.indexOf(a) === i );
-
         if(object){
-            
+            const new_items = (collidesWith||[]).filter( (a,i,arr) => arr.indexOf(a) === i );
             let add = [], remove = [];
-
             if(!cache.collidesWith) add = new_items;
             else {
+                
                 for(let cat of new_items) if(cache.collidesWith.indexOf(cat) === -1) {
                     add.push(cat);
                 }
@@ -114,20 +73,41 @@ export default function PhaserObject({
             for(let a of add)    object.addCollidesWith(a);
             for(let r of remove) object.removeCollidesWith(r);
 
+            return () => { cache.collidesWith = new_items; }
         }
 
-        return () => { cache.collidesWith = new_items; }
     }, [object, collidesWith.join(",")]);
 
-    // handleAngularAcceleration
-    useEffect( () => { 
-        if(object && object.body) object.body.angularAcceleration = angularAcceleration;
-    }, [object, angularAcceleration] );
+      ( typeof rotation === "number") ? useEffect( () => { object && object.setRotation (    rotation ) } , [ object,    rotation ] )
+    : ( typeof angle    === "number") ? useEffect( () => { object && object.setAngle    (       angle ) } , [ object,       angle ] ) : undefined;
+      ( typeof tint === "string")     ? useEffect( () => { object && object.setTint     (        tint ) } , [ object,        tint ] )
+    : ( Array.isArray(tint))          ? useEffect( () => { object && object.setTint     (     ...tint ) } , [ object,     ...tint ] ) : undefined;
+      ( typeof tintFill === "string") ? useEffect( () => { object && object.setTintFill (    tintFill ) } , [ object,    tintFill ] )
+    : ( Array.isArray(tintFill))      ? useEffect( () => { object && object.setTintFill ( ...tintFill ) } , [ object, ...tintFill ] ) : undefined;
+    
+    ( typeof angularAcceleration === "number"  ) && useEffect( () => { if(object && object.body) object.body.angularAcceleration = angularAcceleration; }, [ object, angularAcceleration ] );
+    ( typeof angularVelocity     === "number"  ) && useEffect( () => { if(object && object.body) object.setAngularVelocity(angularVelocity);            }, [ object,     angularVelocity ] );
+    ( typeof collideWorldBounds  === "boolean" ) && useEffect( () => { if(object && object.body) object.setCollideWorldBounds(collideWorldBounds);      }, [ object,  collideWorldBounds ] );
+
+    size         && useEffect( () => { object && object.setSize         (     size.width,    size.height                         ); }, [ object, ...Object.values(size)         ] );
+    acceleration && useEffect( () => { object && object.setAcceleration ( acceleration.x, acceleration.y                         ); }, [ object, ...Object.values(acceleration) ] );
+    velocity     && useEffect( () => { object && object.setVelocity     (     velocity.x,     velocity.y                         ); }, [ object, ...Object.values(velocity)     ] );
+    bounce       && useEffect( () => { object && object.setBounce       (       bounce.x,       bounce.y                         ); }, [ object, ...Object.values(bounce)       ] );
+    origin       && useEffect( () => { object && object.setOrigin       (       origin.x,       origin.y                         ); }, [ object, ...Object.values(origin)       ] );
+    flip         && useEffect( () => { object && object.setFlip         (         flip.x,         flip.y                         ); }, [ object, ...Object.values(flip)         ] );
+    position     && useEffect( () => { object && object.setPosition     (     position.x,     position.y, position.z, position.w ); }, [ object, ...Object.values(position)     ] );
 
 
-    useEffect(() => { if(object && interactive) {
-        scene.input.setDraggable(object, draggable);
-    } }, [draggable, object]);
+
+    ( visible !== undefined)          && useEffect( () => { object && object.setVisible (  visible ); }, [ object, visible  ] );
+    ( zIndex  !== undefined)          && useEffect( () => { object && object.setDepth   (   zIndex ); }, [ object, zIndex   ] );
+    ( typeof alpha === "number" )     && useEffect( () => { object && object.setAlpha   (    alpha ); }, [ object, alpha    ] );
+    ( Array.isArray(alpha)      )     && useEffect( () => { object && object.setAlpha   ( ...alpha ); }, [ object, ...alpha ] );
+
+    ( blendMode === "string" )        && useEffect( () => { object &&      object.setBlendMode ( Phaser.BlendModes[blendMode]  ); }, [ object, blendMode              ] );
+    ( typeof draggable === "boolean") && useEffect( () => { object && scene.input.setDraggable(object, draggable && interactive); }, [ object, draggable, interactive ] );
+
+
 
     useEffect( () => { // Welcome Object
         let update_context = [null, update];
@@ -136,9 +116,7 @@ export default function PhaserObject({
         scene.loadAssets({images, sprites}, true)
             .catch( e => console.error(e))
             .then( () => {
-                const object = create(scene);                           window.object = object;
-
-                console.log("object.setAngularAcceleration", object.setAngularAcceleration);
+                const object = create(scene);
 
                 Object.assign(object, {
                     set setAngularAcceleration(value){
@@ -173,6 +151,7 @@ export default function PhaserObject({
 
         return () => { // Goodbye Object
             update && scene.appData.updateTargets.delete(update_context);
+            object && object.destroy();
         };
     }, []);
 
